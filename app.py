@@ -16,17 +16,9 @@ from googleapiclient.discovery import build
 
 app = Flask(__name__)
 
-# ── Config ────────────────────────────────────────────────────────────────────
-TWILIO_AUTH_TOKEN   = os.environ["TWILIO_AUTH_TOKEN"]
-ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
-GOOGLE_DOC_ID       = os.environ["GOOGLE_DOC_ID"]          # Share this doc with your service account email
-SERVICE_ACCOUNT_JSON = os.environ["SERVICE_ACCOUNT_JSON"]  # Full JSON string of service account key
-
-DB_PATH = "messages.db"
-
-# ── Database ──────────────────────────────────────────────────────────────────
+# ── Init DB on startup ─────────────────────────────────────────────────────────
 def init_db():
-    con = sqlite3.connect(DB_PATH)
+    con = sqlite3.connect("messages.db")
     con.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,6 +30,17 @@ def init_db():
     con.commit()
     con.close()
 
+init_db()
+
+# ── Config ────────────────────────────────────────────────────────────────────
+TWILIO_AUTH_TOKEN   = os.environ["TWILIO_AUTH_TOKEN"]
+ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
+GOOGLE_DOC_ID       = os.environ["GOOGLE_DOC_ID"]          # Share this doc with your service account email
+SERVICE_ACCOUNT_JSON = os.environ["SERVICE_ACCOUNT_JSON"]  # Full JSON string of service account key
+
+DB_PATH = "messages.db"
+
+# ── Database ──────────────────────────────────────────────────────────────────
 def save_message(sender: str, body: str):
     con = sqlite3.connect(DB_PATH)
     con.execute(
