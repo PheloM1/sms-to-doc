@@ -1,0 +1,6 @@
+flask>=3.0.0
+twilio>=9.0.0
+anthropic>=0.25.0
+google-auth>=2.29.0
+google-api-python-client>=2.125.0
+gunicorn>=21.2.0
